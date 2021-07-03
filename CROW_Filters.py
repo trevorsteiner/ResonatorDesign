@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 lambda0 = np.linspace(1200,1800,200)*1e-9
 height_wg=0.4e-6
 w_wg=0.69e-6
-n_clad=1.444
 radius = 600*1e-6
 alpha_dB_cm = 0.40
 kappaList=np.array([0.5,0.14,0.14,0.5])
@@ -76,8 +75,16 @@ mode.set('x max bc','PML')
 mode.set('y max bc','PML')
 
 mode.run()
-
-
+mode.setanalysis('wavelength',lambda0[0])
+mode.findmodes()
+mode.selectmode(1)
+mode.setanalysis("track selected mode",1)
+mode.setanalysis('stop wavelength',lambda0[-1])
+mode.setanalysis('number of points',10)
+mode.setanalysis('number of test modes',4)
+mode.frequencysweep()
+neff=mode.getdata('frequencysweep','neff')
+f=mode.getdata('frequencysweep','f')
 
 # ## EFFECTIVE INDEX CALCULATIONS ##################################
 # #Eventually plan to replace this section with some Lumerical scripting
@@ -88,7 +95,7 @@ mode.run()
 # neff=np.sort([data[i][1] for i in range(len(data))])
 
 ## Increased sampling of neff
-ang_neff=interpolate.interp1d(f,neff,kind='cubic')
+ang_neff=interpolate.interp1d(f,neff,kind='cubic',axis=1)
 fnew=np.linspace(f[0],f[-1],len(lambda0))
 
 ## Round trip distance, propagation constant
