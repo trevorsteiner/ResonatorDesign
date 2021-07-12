@@ -127,8 +127,8 @@ print('FSR={} GHz'.format(np.round(FSR*1e-9)))
 ##Loop space for varying kappa
 kappa1=0.5
 kappa2=0.1
-kappa3=0.1
-for kappa1 in np.linspace(0.1,0.5,4):
+kappa3=0.5
+for kappa2 in np.linspace(0.1,0.5,4):
     kappaList=np.array([kappa1,kappa2,kappa3])
     ## Transfer matrix elements
     C=[]
@@ -149,11 +149,12 @@ for kappa1 in np.linspace(0.1,0.5,4):
 
     #Plot
     #plt.plot(lambda0*1e9,T_thru_dB)
+    plt.rcParams.update({'font.size': 22})
     plt.plot(lambda0*1e9,T_drop_dB)
     #plt.legend(['T_thru','T_drop'])
     plt.xlabel('Wavelength (nm)')
     plt.ylabel('T_drop (dB)')
-plt.legend(['\u03BA_1=0.1','\u03BA_1=0.2','\u03BA_1=0.3','\u03BA_1=0.4'])
+plt.legend(['\u03BA_2=0.1','\u03BA_2=0.2','\u03BA_2=0.3','\u03BA_2=0.4'],loc="upper right")
 plt.show()
 
 """

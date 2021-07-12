@@ -125,36 +125,38 @@ FSR=c/(ng[0]*L_rt)
 print('FSR={} GHz'.format(np.round(FSR*1e-9)))
 
 ##Loop space for varying kappa
-kappa1=0.5
+kappa1=0.6
 kappa2=0.1
-for kappa1 in np.linspace(0.1,0.5,4):
-    kappaList=np.array([kappa1,kappa2,kappa2,kappa1])
-    ## Transfer matrix elements
-    C=[]
-    S=[]
-    for i in range(0,4):
-        C.append(cmath.sqrt(((1-kappaList[i])*(1-gamma))))
-        S.append(1/1j*cmath.sqrt(((1-gamma*1j)*kappaList[i])))
-    xi=np.multiply(np.exp(alpha*L_rt/2),np.exp(-1j*beta*L_rt))
-    ## Compute transmission
-    E_drop=S[0]*S[1]*S[2]*S[3]*np.power(xi,1.5)/(1-C[0]*C[1]*xi-C[1]*C[2]*xi-C[2]*C[3]*xi+C[0]*C[2]*np.power(xi,2)+C[1]*C[3]*np.power(xi,2)-C[0]*C[3]*np.power(xi,3)+\
-        C[0]*C[1]*C[2]*C[3]*np.power(xi,2))
-    T_drop=np.power(abs(E_drop),2)
+#for kappa2 in np.linspace(0.1,0.5,4):
+kappaList=np.array([kappa1,kappa2,kappa2,kappa1])
+## Transfer matrix elements
+C=[]
+S=[]
+for i in range(0,4):
+    C.append(cmath.sqrt(((1-kappaList[i])*(1-gamma))))
+    S.append(1/1j*cmath.sqrt(((1-gamma*1j)*kappaList[i])))
+xi=np.multiply(np.exp(alpha*L_rt/2),np.exp(-1j*beta*L_rt))
+## Compute transmission
+E_drop=S[0]*S[1]*S[2]*S[3]*np.power(xi,1.5)/(1-C[0]*C[1]*xi-C[1]*C[2]*xi-C[2]*C[3]*xi+C[0]*C[2]*np.power(xi,2)+C[1]*C[3]*np.power(xi,2)-C[0]*C[3]*np.power(xi,3)+\
+    C[0]*C[1]*C[2]*C[3]*np.power(xi,2))
+T_drop=np.power(abs(E_drop),2)
 
-    E_thru=(C[0]-C[1]*xi-C[0]*C[1]*C[2]*xi+C[2]*np.power(xi,2)-C[0]*C[2]*C[3]*xi+C[1]*C[2]*C[3]*np.power(xi,2)+C[0]*C[1]*C[3]*np.power(xi,2)-C[3]*np.power(xi,3))\
-        /(1-C[0]*C[1]*xi-C[1]*C[2]*xi-C[2]*C[3]*xi+C[0]*C[2]*np.power(xi,2)+C[1]*C[3]*np.power(xi,2)-C[0]*C[3]*np.power(xi,3)+C[0]*C[1]*C[2]*C[3]*np.power(xi,2))
-    T_thru=np.power(abs(E_thru),2)
-    ## Data in dB
-    T_drop_dB=10*np.log10(T_drop)
-    T_thru_dB=10*np.log10(T_thru)
+E_thru=(C[0]-C[1]*xi-C[0]*C[1]*C[2]*xi+C[2]*np.power(xi,2)-C[0]*C[2]*C[3]*xi+C[1]*C[2]*C[3]*np.power(xi,2)+C[0]*C[1]*C[3]*np.power(xi,2)-C[3]*np.power(xi,3))\
+    /(1-C[0]*C[1]*xi-C[1]*C[2]*xi-C[2]*C[3]*xi+C[0]*C[2]*np.power(xi,2)+C[1]*C[3]*np.power(xi,2)-C[0]*C[3]*np.power(xi,3)+C[0]*C[1]*C[2]*C[3]*np.power(xi,2))
+T_thru=np.power(abs(E_thru),2)
+## Data in dB
+T_drop_dB=10*np.log10(T_drop)
+T_thru_dB=10*np.log10(T_thru)
 
-    #Plot
-    #plt.plot(lambda0*1e9,T_thru_dB)
-    plt.plot(lambda0*1e9,T_drop_dB)
-    #plt.legend(['T_thru','T_drop'])
-    plt.xlabel('Wavelength (nm)')
-    plt.ylabel('T_drop (dB)')
-plt.legend(['\u03BA_1=0.1','\u03BA_1=0.2','\u03BA_1=0.3','\u03BA_1=0.4'])
+#Plot
+plt.rcParams.update({'font.size': 22})
+plt.plot(lambda0*1e9,T_thru_dB)
+
+plt.plot(lambda0*1e9,T_drop_dB)
+plt.legend(['T_thru','T_drop'])
+plt.xlabel('Wavelength (nm)')
+plt.ylabel('Transmission (dB)')
+#plt.legend(['\u03BA_2=0.1','\u03BA_2=0.2','\u03BA_2=0.3','\u03BA_2=0.4'],loc="upper right")
 plt.show()
 
 """
